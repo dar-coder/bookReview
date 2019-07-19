@@ -1,0 +1,81 @@
+{% extends "layout.html" %}
+
+{% block title %}
+	Book: {{ book.title }}
+{% endblock %}
+
+{% block main %}
+	<div class="container">
+		<table class="table">
+			<tr>
+				<th>Title</th>
+				<td>{{ book.title }}</td>
+			</tr>
+			<tr>
+				<th>Author</th>
+				<td>{{ book.author }}</td>
+			</tr>
+			<tr>
+				<th>Year</th>
+				<td>{{ book.year }}</td>
+			</tr>
+			<tr>
+				<th>ISBN</th>
+				<td>{{ book.isbn13 }}</td>
+			</tr>
+			<tr>
+				<th>Review Count</th>
+				<td>{{ book.reviews_count }}</td>
+			</tr>
+			<tr>
+				<th>Average Score</th>
+				<td>{{ book.average_rating }}</td>
+			</tr>
+		</table>
+	</div>	
+
+	<br></br>
+
+	{% if others %}
+	<div>
+		<h3 class="title">What users say about this book:</h3>
+	</div>
+
+	<br></br>
+
+	<div class="container">
+		{% for review in review_list %}
+			<p><b>{{ review.username }}</b> says: "{{ review.review }}"</p>
+		{% endfor %}
+	</div>
+	{% else %}
+	<div>
+		There are no reviews for this book
+	</div>
+	{% endif %}
+
+	<br></br>
+	
+	{% if no_rating or no_review %}
+	<form action="{{ url_for('book', isbn=book.isbn) }}" method="post">
+		<fieldset>
+			<legend class="legend">Submit a Review</legend>	
+			
+			{% if no_rating %}
+			<div class="form-group">
+				Your rating: <input class="form-control" type="number" min="1" max="5" step="1" name="rating"/>
+			</div>
+			{% endif %}
+
+			{% if no_review %}
+			<div class="form-group">
+				<textarea class="form-control" name="review" rows="4" cols="50" placeholder="Your Review"></textarea>
+			</div>	
+			{% endif %}
+			<div class="form-group">
+				<button class="btn btn-primary" type="submit">Submit</button>
+			</div>
+		</fieldset>			
+	</form>
+	{% endif %}	
+{% endblock %}
